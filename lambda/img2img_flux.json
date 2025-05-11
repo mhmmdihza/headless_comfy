@@ -1,144 +1,190 @@
 {
-    "3": {
-      "inputs": {
-        "seed": 629029495852377,
-        "steps": 4,
-        "cfg": 1,
-        "sampler_name": "euler",
-        "scheduler": "simple",
-        "denoise": 0.9,
-        "model": [
-          "24",
-          0
-        ],
-        "positive": [
-          "15",
-          0
-        ],
-        "negative": [
-          "16",
-          0
-        ],
-        "latent_image": [
-          "23",
-          0
-        ]
-      },
-      "class_type": "KSampler",
-      "_meta": {
-        "title": "KSampler"
-      }
+  "6": {
+    "inputs": {
+      "text": "A photorealistic selfie of a man, (high-resolution skin texture:1.2), detailed eyes, (standing in front of a park, cinematic lighting, environmental details, (sharp focus on subject:1.3), (vivid background colors:1.2), professional portrait, ultra-detailed.",
+      "clip": [
+        "11",
+        0
+      ]
     },
-    "8": {
-      "inputs": {
-        "samples": [
-          "3",
-          0
-        ],
-        "vae": [
-          "11",
-          0
-        ]
-      },
-      "class_type": "VAEDecode",
-      "_meta": {
-        "title": "VAE Decode"
-      }
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "13",
+        0
+      ],
+      "vae": [
+        "10",
+        0
+      ]
     },
-    "11": {
-      "inputs": {
-        "vae_name": "ae.safetensors"
-      },
-      "class_type": "VAELoader",
-      "_meta": {
-        "title": "Load VAE"
-      }
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "10": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
     },
-    "15": {
-      "inputs": {
-        "clip_l": "prompt",
-        "t5xxl": "prompt",
-        "guidance": 3.5,
-        "clip": [
-          "25",
-          0
-        ]
-      },
-      "class_type": "CLIPTextEncodeFlux",
-      "_meta": {
-        "title": "CLIPTextEncodeFlux"
-      }
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "11": {
+    "inputs": {
+      "clip_name1": "t5xxl_fp8_e4m3fn.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "type": "flux",
+      "device": "default"
     },
-    "16": {
-      "inputs": {
-        "conditioning": [
-          "15",
-          0
-        ]
-      },
-      "class_type": "ConditioningZeroOut",
-      "_meta": {
-        "title": "ConditioningZeroOut"
-      }
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "DualCLIPLoader"
+    }
+  },
+  "13": {
+    "inputs": {
+      "noise": [
+        "50",
+        0
+      ],
+      "guider": [
+        "22",
+        0
+      ],
+      "sampler": [
+        "16",
+        0
+      ],
+      "sigmas": [
+        "38",
+        1
+      ],
+      "latent_image": [
+        "94",
+        0
+      ]
     },
-    "21": {
-      "inputs": {
-        "image": "unique_name"
-      },
-      "class_type": "LoadImage",
-      "_meta": {
-        "title": "Load Image"
-      }
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "16": {
+    "inputs": {
+      "sampler_name": "deis"
     },
-    "23": {
-      "inputs": {
-        "pixels": [
-          "21",
-          0
-        ],
-        "vae": [
-          "11",
-          0
-        ]
-      },
-      "class_type": "VAEEncode",
-      "_meta": {
-        "title": "VAE Encode"
-      }
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "17": {
+    "inputs": {
+      "scheduler": "sgm_uniform",
+      "steps": 4,
+      "denoise": 0.7000000000000002,
+      "model": [
+        "112",
+        0
+      ]
     },
-    "24": {
-      "inputs": {
-        "unet_name": "flux1-dev.safetensors",
-        "weight_dtype": "default"
-      },
-      "class_type": "UNETLoader",
-      "_meta": {
-        "title": "Load Diffusion Model"
-      }
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "22": {
+    "inputs": {
+      "model": [
+        "112",
+        0
+      ],
+      "conditioning": [
+        "6",
+        0
+      ]
     },
-    "25": {
-      "inputs": {
-        "clip_name1": "clip_l.safetensors",
-        "clip_name2": "t5xxl_fp8_e4m3fn.safetensors",
-        "type": "flux",
-        "device": "default"
-      },
-      "class_type": "DualCLIPLoader",
-      "_meta": {
-        "title": "DualCLIPLoader"
-      }
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "38": {
+    "inputs": {
+      "step": 0,
+      "sigmas": [
+        "17",
+        0
+      ]
     },
-    "26": {
-      "inputs": {
-        "filename_prefix": "ComfyUI",
-        "images": [
-          "8",
-          0
-        ]
-      },
-      "class_type": "SaveImage",
-      "_meta": {
-        "title": "Save Image"
-      }
+    "class_type": "SplitSigmas",
+    "_meta": {
+      "title": "SplitSigmas"
+    }
+  },
+  "50": {
+    "inputs": {
+      "noise_seed": 467239638261443
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "82": {
+    "inputs": {
+      "image": "a.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "94": {
+    "inputs": {
+      "pixels": [
+        "82",
+        0
+      ],
+      "vae": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "102": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "112": {
+    "inputs": {
+      "unet_name": "flux1-schnell.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
     }
   }
+}

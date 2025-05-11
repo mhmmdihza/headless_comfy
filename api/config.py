@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     SQS_URL:str
     RUNPOD_URL:str
     RUNPOD_SECRET:str
+    SIGNATURE_SECRET:str
+    APP_BASE_URL:str
 
     class Config:
         env_file = ".env"

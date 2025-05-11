@@ -48,9 +48,14 @@ def img2img_flux(message_data):
     #validate message_data
     image_key = message_data.get("image_key")
     prompt = message_data.get("prompt")
+    webhook_url = message_data.get("webhook")
     if not prompt:
         logger.error(f"Missing prompt in message: {message_data}")
         raise ValueError("missing image_key or prompt")
+    if not webhook_url:
+        logger.error(f"Missing webhook in message: {message_data}")
+        raise ValueError("missing webhook")
+
     try:
         image_base64 = load_image(image_key)
     except Exception as e:
@@ -61,11 +66,11 @@ def img2img_flux(message_data):
     with open(os.path.join(os.path.dirname(__file__), "img2img_flux.json")) as f:
         workflow = json.load(f)
 
-    workflow["15"]["inputs"]["clip_l"] = prompt
-    workflow["15"]["inputs"]["t5xxl"] = prompt
-    workflow["21"] = {"inputs": {"image": unique_name}, "class_type": "LoadImage", "_meta": {"title": "Load Image"}}
+    workflow["6"]["inputs"]["text"] = prompt
+    workflow["82"] = {"inputs": {"image": unique_name}, "class_type": "LoadImage", "_meta": {"title": "Load Image"}}
 
     body = {
+        "webhook": webhook_url,
         "input": {
             "images": [
                 {

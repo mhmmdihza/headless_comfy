@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from api.handler.endpoints import router
@@ -9,6 +10,7 @@ from api.middleware.jwt import JWTAuthMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logging.basicConfig(level=logging.INFO)
     await init_db()
     yield
 
@@ -20,6 +22,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Image-Metadata"],
 )
-app.add_middleware(JWTAuthMiddleware, secret=settings.JWT_SECRET)
+app.add_middleware(JWTAuthMiddleware)
 app.include_router(router)

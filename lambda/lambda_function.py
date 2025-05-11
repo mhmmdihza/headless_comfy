@@ -45,7 +45,7 @@ def load_secrets():
         logger.error(f"Failed to load secrets: {e}")
         raise
 
-def send_post_request(url, token, payload):
+def send_post_request_runpod(url, token, payload):
     try:
         logger.info("Making POST request to the API")
         response = http.request(
@@ -68,6 +68,25 @@ def send_post_request(url, token, payload):
     except Exception as e:
         logger.error(f"Error during POST request: {e}")
         raise
+
+def send_post_request_webhook(url, status):
+    payload = {
+        "status": status
+    }
+    try:
+        logger.info("Making POST request to the webhook")
+        response = http.request(
+            "POST",
+            url,
+            body=json.dumps(payload),
+            headers={
+                "Content-Type": "application/json"
+            }
+        )
+        logger.info(f"webhook Response status: {response.status}")
+    except Exception as e:
+        logger.error(f"Error during POST webhook: {e}")
+    
 
 def update_queue_status(db_config, s3_object_id, status,runpod_id=None, image_result=None):
     query = """
@@ -136,11 +155,9 @@ def lambda_handler(event, context):
         db_config = secrets["postgres"]
 
 
-        response, status_to_update, runpod_id = send_post_request(
+        response, status_to_update, runpod_id = send_post_request_runpod(
             url, token, payload
         )
-        if status_to_update == 'IN_QUEUE':
-            status_to_update = 'IN_PROGRESS'
         body = response.data.decode("utf-8")
         try:
             update_queue_status(
@@ -149,6 +166,9 @@ def lambda_handler(event, context):
                 status=status_to_update,
                 runpod_id=runpod_id,
             )
+            webhook_url = message_data.get("webhook")
+            if webhook_url:
+                send_post_request_webhook(webhook_url,status_to_update)
         except Exception as db_err:
             logger.error(f"Final status update failed: {db_err}")
         return {
